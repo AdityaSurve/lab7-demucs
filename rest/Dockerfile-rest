@@ -1,0 +1,16 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+RUN pip install --upgrade pip
+RUN pip install redis flask minio jsonpickle
+
+COPY rest-server.py /app/
+COPY index.html /app/
+
+EXPOSE 5000
+
+ENV FLASK_APP=rest-server.py
+ENV FLASK_RUN_HOST=0.0.0.0
+
+CMD ["python", "rest-server.py"]

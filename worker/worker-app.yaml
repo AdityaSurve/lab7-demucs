@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-deployment
+  labels:
+    app: worker-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: worker-server
+  template:
+    metadata:
+      labels:
+        app: worker-server
+    spec:
+      containers:
+      - name: worker-server
+        image: gcr.io/YOUR_PROJECT_ID_HERE/demucs-worker:v1
+        env:
+        - name: REDIS_HOST
+          value: "redis"
+        - name: MINIO_HOST
+          value: "minio-proj"

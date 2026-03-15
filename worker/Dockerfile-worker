@@ -1,0 +1,9 @@
+FROM xserrat/facebook-demucs:latest
+
+# We need to install our python packages
+RUN pip3 install --upgrade minio redis requests
+
+WORKDIR /app
+COPY worker-server.py /app/
+
+CMD ["python3", "worker-server.py"]
