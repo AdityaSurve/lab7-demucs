@@ -16,9 +16,12 @@ spec:
     spec:
       containers:
       - name: worker-server
-        image: gcr.io/YOUR_PROJECT_ID_HERE/demucs-worker:v1
+        image: gcr.io/lab7-490321/demucs-worker:v1
+        imagePullPolicy: Always
+        # Override any image ENTRYPOINT so our script is the main process
+        command: ["python3", "worker-server.py"]
         env:
         - name: REDIS_HOST
           value: "redis"
         - name: MINIO_HOST
-          value: "minio-proj"
+          value: "minio:9000"

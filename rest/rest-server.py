@@ -13,9 +13,27 @@ from minio.error import S3Error
 app = Flask(__name__)
 
 # Environment variables
-REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
-REDIS_PORT = int(os.environ.get('REDIS_PORT', 6379))
-MINIO_HOST = os.environ.get('MINIO_HOST', 'localhost:9000')
+# Kubernetes may inject REDIS_PORT=tcp://host:6379 when a service named "redis" exists.
+# Support both that and plain REDIS_HOST + REDIS_PORT (or REDIS_DB_PORT).
+def _redis_host_port():
+    port_raw = os.environ.get('REDIS_DB_PORT') or os.environ.get('REDIS_PORT', '6379')
+    if isinstance(port_raw, str) and '://' in port_raw:
+        # e.g. tcp://34.118.239.26:6379
+        from urllib.parse import urlparse
+        u = urlparse(port_raw)
+        host = u.hostname or os.environ.get('REDIS_HOST', 'redis')
+        port = u.port or 6379
+        return host, port
+    try:
+        port = int(port_raw)
+    except (ValueError, TypeError):
+        port = 6379
+    return os.environ.get('REDIS_HOST', 'redis'), port
+
+REDIS_HOST, REDIS_PORT = _redis_host_port()
+
+_minio_host = os.environ.get('MINIO_HOST', 'minio:9000')
+MINIO_HOST = _minio_host if ':' in _minio_host else f'{_minio_host}:9000'
 MINIO_USER = os.environ.get('MINIO_USER', 'rootuser')
 MINIO_PASS = os.environ.get('MINIO_PASS', 'rootpass123')
 

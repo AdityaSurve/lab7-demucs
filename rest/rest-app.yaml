@@ -16,14 +16,14 @@ spec:
     spec:
       containers:
       - name: rest-server
-        image: gcr.io/YOUR_PROJECT_ID_HERE/demucs-rest:v1
+        image: gcr.io/lab7-490321/demucs-rest:v1
         ports:
         - containerPort: 5000
         env:
         - name: REDIS_HOST
           value: "redis"
         - name: MINIO_HOST
-          value: "minio-proj"
+          value: "minio:9000"
 ---
 apiVersion: v1
 kind: Service

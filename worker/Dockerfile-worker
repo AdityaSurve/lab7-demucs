@@ -5,5 +5,5 @@ RUN pip3 install --upgrade minio redis requests
 
 WORKDIR /app
 COPY worker-server.py /app/
-
+ENV PYTHONUNBUFFERED=1
 CMD ["python3", "worker-server.py"]
