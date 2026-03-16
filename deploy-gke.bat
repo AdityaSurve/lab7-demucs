@@ -14,7 +14,6 @@ echo Pushing Worker Image to GCR...
 docker push gcr.io/%PROJECT_ID%/demucs-worker:v1
 
 echo Applying Kubernetes Deployments...
-:: Basic string replacement in powershell to fix the YAMLs
 powershell -Command "(gc rest\rest-app.yaml) -replace 'YOUR_PROJECT_ID_HERE', '%PROJECT_ID%' | Out-File -encoding ASCII rest\rest-app.yaml"
 powershell -Command "(gc worker\worker-app.yaml) -replace 'YOUR_PROJECT_ID_HERE', '%PROJECT_ID%' | Out-File -encoding ASCII worker\worker-app.yaml"
 
